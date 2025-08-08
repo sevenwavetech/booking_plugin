@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <div class="wrap">
-    <h2><?php echo $service ? esc_html__( 'Edit Service', 'tours-booking' ) : esc_html__( 'Add Service', 'tours-booking' ); ?></h2>
+    <h2><?php echo $service ? esc_html__( 'Edit Tour', 'tours-booking' ) : esc_html__( 'Add Tour', 'tours-booking' ); ?></h2>
     <form method="post">
         <?php wp_nonce_field( 'tb_save_service', 'tb_service_nonce' ); ?>
         <input type="hidden" name="service_id" value="<?php echo $service ? intval( $service->ID ) : 0; ?>" />

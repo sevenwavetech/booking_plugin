@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) { exit; } ?>
 <div class="wrap">
-    <h1><?php echo esc_html__( 'Services', 'tours-booking' ); ?> <a href="<?php echo esc_url( admin_url( 'admin.php?page=tb_services&action=add' ) ); ?>" class="page-title-action"><?php echo esc_html__( 'Add New', 'tours-booking' ); ?></a></h1>
+    <h1><?php echo esc_html__( 'Tours', 'tours-booking' ); ?> <a href="<?php echo esc_url( admin_url( 'admin.php?page=tb_services&action=add' ) ); ?>" class="page-title-action"><?php echo esc_html__( 'Add New', 'tours-booking' ); ?></a></h1>
     <?php if ( isset( $_GET['action'] ) && 'add' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) : // phpcs:ignore ?>
         <?php TB_Services::render_edit( 0 ); ?>
     <?php elseif ( isset( $_GET['action'] ) && 'edit' === sanitize_text_field( wp_unslash( $_GET['action'] ) ) && ! empty( $_GET['service_id'] ) ) : // phpcs:ignore ?>

@@ -57,8 +57,8 @@ class TB_Post_Types {
 
     private static function register_service_category_taxonomy() {
         $labels = [
-            'name' => __( 'Service Categories', 'tours-booking' ),
-            'singular_name' => __( 'Service Category', 'tours-booking' ),
+            'name' => __( 'Tour Categories', 'tours-booking' ),
+            'singular_name' => __( 'Tour Category', 'tours-booking' ),
         ];
         register_taxonomy( 'tb_service_category', [ 'tb_tour' ], [
             'labels' => $labels,
@@ -153,9 +153,9 @@ class TB_Post_Types {
         $tours = get_posts( [ 'post_type' => 'tb_tour', 'numberposts' => -1, 'post_status' => 'publish' ] );
         ?>
         <p>
-            <label><strong><?php echo esc_html__( 'Service', 'tours-booking' ); ?></strong></label>
+            <label><strong><?php echo esc_html__( 'Tour', 'tours-booking' ); ?></strong></label>
             <select name="tb_tour_id" class="widefat">
-                <option value=""><?php echo esc_html__( 'Select a service', 'tours-booking' ); ?></option>
+                <option value=""><?php echo esc_html__( 'Select a tour', 'tours-booking' ); ?></option>
                 <?php foreach ( $tours as $tour ) : ?>
                     <option value="<?php echo esc_attr( $tour->ID ); ?>" <?php selected( (int) $tour_id, (int) $tour->ID ); ?>><?php echo esc_html( $tour->post_title ); ?></option>
                 <?php endforeach; ?>
