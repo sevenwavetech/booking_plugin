@@ -46,6 +46,7 @@ require_once TB_PLUGIN_DIR . 'includes/class-tb-form-builder.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-i18n.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-services.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-schedule.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-db.php';
 
 class Tours_Booking_Plugin {
 
@@ -114,6 +115,7 @@ class Tours_Booking_Plugin {
         TB_Roles::register_roles();
         TB_Post_Types::register();
         TB_Clients::register();
+        TB_DB::install();
         flush_rewrite_rules();
 
         // Ensure private dir
