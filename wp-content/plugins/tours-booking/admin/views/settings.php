@@ -67,15 +67,24 @@ $statuses = get_terms( [ 'taxonomy' => 'tb_booking_status', 'hide_empty' => fals
                 <?php endforeach; ?>
             </select>
         <?php elseif ( 'notifications' === $tab ) : ?>
-            <h2><?php echo esc_html__( 'Email Templates', 'tours-booking' ); ?></h2>
-            <p class="description"><?php echo esc_html__( 'Use placeholders like [client_name], [tour_name], [booking_date].', 'tours-booking' ); ?></p>
+            <p class="description"><?php echo esc_html__( 'Templates are sent to Client and assigned Guides on events: created, updated, status changes (pending, approved, canceled). Use placeholders: [client_name], [client_email], [tour_name], [booking_date], [booking_start], [booking_end], [participants], [booking_id].', 'tours-booking' ); ?></p>
             <div id="tb-templates">
-                <?php foreach ( $statuses as $status ) :
-                    $tpl = $email_templates[ $status->slug ] ?? [ 'subject' => '', 'body' => '' ]; ?>
-                    <div class="tb-template" data-status="<?php echo esc_attr( $status->slug ); ?>">
-                        <h3><?php echo esc_html( $status->name ); ?></h3>
-                        <p><input type="text" class="large-text tb-template-subject" placeholder="<?php echo esc_attr__( 'Subject', 'tours-booking' ); ?>" value="<?php echo esc_attr( $tpl['subject'] ); ?>" /></p>
-                        <p><textarea class="large-text tb-template-body" rows="6" placeholder="<?php echo esc_attr__( 'Body', 'tours-booking' ); ?>"><?php echo esc_textarea( $tpl['body'] ); ?></textarea></p>
+                <?php
+                $events = array_merge( [ (object) ['slug' => 'created', 'name' => __( 'Created', 'tours-booking' ) ], (object) ['slug' => 'updated', 'name' => __( 'Updated', 'tours-booking' ) ] ], $statuses );
+                foreach ( $events as $status ) :
+                    $key = is_object( $status ) ? $status->slug : $status;
+                    $label = is_object( $status ) ? $status->name : ucfirst( $status );
+                    $tplClient = $email_templates[ $key ]['client'] ?? [ 'subject' => '', 'body' => '' ];
+                    $tplGuide  = $email_templates[ $key ]['guide'] ?? [ 'subject' => '', 'body' => '' ];
+                ?>
+                    <div class="tb-template" data-status="<?php echo esc_attr( $key ); ?>">
+                        <h3><?php echo esc_html( $label ); ?></h3>
+                        <h4><?php echo esc_html__( 'Client Email', 'tours-booking' ); ?></h4>
+                        <p><input type="text" class="large-text tb-template-subject" data-role="client" placeholder="<?php echo esc_attr__( 'Subject', 'tours-booking' ); ?>" value="<?php echo esc_attr( $tplClient['subject'] ); ?>" /></p>
+                        <p><textarea class="large-text tb-template-body" data-role="client" rows="6" placeholder="<?php echo esc_attr__( 'Body', 'tours-booking' ); ?>"><?php echo esc_textarea( $tplClient['body'] ); ?></textarea></p>
+                        <h4><?php echo esc_html__( 'Guide Email', 'tours-booking' ); ?></h4>
+                        <p><input type="text" class="large-text tb-template-subject" data-role="guide" placeholder="<?php echo esc_attr__( 'Subject', 'tours-booking' ); ?>" value="<?php echo esc_attr( $tplGuide['subject'] ); ?>" /></p>
+                        <p><textarea class="large-text tb-template-body" data-role="guide" rows="6" placeholder="<?php echo esc_attr__( 'Body', 'tours-booking' ); ?>"><?php echo esc_textarea( $tplGuide['body'] ); ?></textarea></p>
                     </div>
                 <?php endforeach; ?>
             </div>

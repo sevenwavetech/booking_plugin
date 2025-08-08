@@ -35,9 +35,14 @@
         var templates = {};
         $('#tb-templates .tb-template').each(function(){
             var status = $(this).data('status');
-            templates[status] = {
-                subject: $(this).find('.tb-template-subject').val() || '',
-                body: $(this).find('.tb-template-body').val() || ''
+            templates[status] = templates[status] || {};
+            templates[status]['client'] = {
+                subject: $(this).find('.tb-template-subject[data-role="client"]').val() || '',
+                body: $(this).find('.tb-template-body[data-role="client"]').val() || ''
+            };
+            templates[status]['guide'] = {
+                subject: $(this).find('.tb-template-subject[data-role="guide"]').val() || '',
+                body: $(this).find('.tb-template-body[data-role="guide"]').val() || ''
             };
         });
         $('#tb_email_templates_json').val(JSON.stringify(templates));

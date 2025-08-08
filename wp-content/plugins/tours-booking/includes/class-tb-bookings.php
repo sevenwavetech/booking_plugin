@@ -107,7 +107,9 @@ class TB_Bookings {
         // Assign taxonomy status
         wp_set_object_terms( $post_id, $status_slug, 'tb_booking_status', false );
 
+        // Notify created
         do_action( 'tb_booking_status_changed', $post_id, '', $status_slug );
+        TB_Notifications::send_created_email( $post_id );
 
         wp_send_json_success( [ 'message' => __( 'Booking submitted successfully.', 'tours-booking' ) ] );
     }
