@@ -50,6 +50,10 @@ class TB_Shortcodes {
                 <input type="email" name="tb_client_email" required />
             </div>
             <div class="tb-field">
+                <label><?php echo esc_html__( 'Client Phone', 'tours-booking' ); ?></label>
+                <input type="text" name="tb_client_phone" />
+            </div>
+            <div class="tb-field">
                 <label><?php echo esc_html__( 'Participants', 'tours-booking' ); ?>*</label>
                 <input type="number" name="tb_participants" min="1" required />
             </div>

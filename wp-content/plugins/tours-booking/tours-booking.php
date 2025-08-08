@@ -40,6 +40,9 @@ require_once TB_PLUGIN_DIR . 'includes/class-tb-admin.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-shortcodes.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-calendar.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-gcal.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-employees.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-clients.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-form-builder.php';
 
 class Tours_Booking_Plugin {
 
@@ -50,8 +53,12 @@ class Tours_Booking_Plugin {
         // Init components
         add_action( 'init', [ 'TB_Post_Types', 'register' ] );
         add_action( 'init', [ 'TB_Roles', 'register_roles' ] );
+        add_action( 'init', [ 'TB_Clients', 'register' ] );
         add_action( 'admin_init', [ 'TB_Roles', 'map_caps' ] );
         add_action( 'admin_menu', [ 'TB_Admin', 'register_menus' ] );
+        add_action( 'admin_menu', [ 'TB_Employees', 'register_menu' ] );
+        add_action( 'admin_menu', [ 'TB_Clients', 'add_menu' ] );
+        add_action( 'admin_menu', [ 'TB_Form_Builder', 'register_menu' ] );
 
         // Assets
         add_action( 'admin_enqueue_scripts', [ 'TB_Admin', 'enqueue_assets' ] );
@@ -98,6 +105,7 @@ class Tours_Booking_Plugin {
         // Register roles and CPTs before flushing
         TB_Roles::register_roles();
         TB_Post_Types::register();
+        TB_Clients::register();
         flush_rewrite_rules();
 
         // Ensure private dir

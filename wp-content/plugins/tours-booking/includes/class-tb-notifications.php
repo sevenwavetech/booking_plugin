@@ -18,7 +18,8 @@ class TB_Notifications {
         if ( ! empty( $settings['from_name'] ) && ! empty( $settings['from_email'] ) ) {
             $headers[] = 'From: ' . $settings['from_name'] . ' <' . $settings['from_email'] . '>';
         }
-        $to = get_post_meta( $booking_id, 'tb_client_email', true );
+        $client_id = (int) get_post_meta( $booking_id, 'tb_client_id', true );
+        $to = $client_id ? get_post_meta( $client_id, 'tb_client_email', true ) : '';
         if ( is_email( $to ) ) {
             wp_mail( $to, $subject, $body, $headers );
         }
@@ -27,9 +28,10 @@ class TB_Notifications {
     private static function get_placeholders( $booking_id ) {
         $tour_id = (int) get_post_meta( $booking_id, 'tb_tour_id', true );
         $tour_name = $tour_id ? get_the_title( $tour_id ) : '';
+        $client_id = (int) get_post_meta( $booking_id, 'tb_client_id', true );
         $data = [
-            'client_name' => get_post_meta( $booking_id, 'tb_client_name', true ),
-            'client_email' => get_post_meta( $booking_id, 'tb_client_email', true ),
+            'client_name' => $client_id ? get_the_title( $client_id ) : '',
+            'client_email' => $client_id ? get_post_meta( $client_id, 'tb_client_email', true ) : '',
             'tour_name' => $tour_name,
             'booking_date' => get_post_meta( $booking_id, 'tb_booking_date', true ),
             'participants' => get_post_meta( $booking_id, 'tb_participants', true ),

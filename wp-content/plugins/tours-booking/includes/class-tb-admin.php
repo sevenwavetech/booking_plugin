@@ -15,6 +15,9 @@ class TB_Admin {
 
         add_submenu_page( 'tb_dashboard', __( 'Tours', 'tours-booking' ), __( 'Tours', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_tour' );
         add_submenu_page( 'tb_dashboard', __( 'Bookings', 'tours-booking' ), __( 'Bookings', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_booking' );
+        add_submenu_page( 'tb_dashboard', __( 'Employees', 'tours-booking' ), __( 'Employees', 'tours-booking' ), 'manage_options', 'tb_employees', [ 'TB_Employees', 'render_list' ] );
+        add_submenu_page( 'tb_dashboard', __( 'Clients', 'tours-booking' ), __( 'Clients', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_client' );
+        add_submenu_page( 'tb_dashboard', __( 'Form Builder', 'tours-booking' ), __( 'Form Builder', 'tours-booking' ), 'manage_options', 'tb_form_builder', [ 'TB_Form_Builder', 'render' ] );
         add_submenu_page( 'tb_dashboard', __( 'Calendar', 'tours-booking' ), __( 'Calendar', 'tours-booking' ), 'manage_options', 'tb_calendar', [ __CLASS__, 'render_calendar' ] );
         add_submenu_page( 'tb_dashboard', __( 'Settings', 'tours-booking' ), __( 'Settings', 'tours-booking' ), 'manage_options', 'tb_settings', [ 'TB_Settings', 'render_settings_page' ] );
     }

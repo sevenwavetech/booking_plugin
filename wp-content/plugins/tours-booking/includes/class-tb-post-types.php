@@ -58,6 +58,7 @@ class TB_Post_Types {
         add_meta_box( 'tb_tour_guides', __( 'Assigned Guides', 'tours-booking' ), [ __CLASS__, 'render_tour_guides_meta_box' ], 'tb_tour', 'side', 'default' );
 
         add_meta_box( 'tb_booking_details', __( 'Booking Details', 'tours-booking' ), [ __CLASS__, 'render_booking_meta_box' ], 'tb_booking', 'normal', 'default' );
+        add_meta_box( 'tb_booking_client', __( 'Client', 'tours-booking' ), [ __CLASS__, 'render_booking_client_meta_box' ], 'tb_booking', 'side', 'default' );
     }
 
     public static function render_tour_meta_box( $post ) {
@@ -104,8 +105,6 @@ class TB_Post_Types {
     public static function render_booking_meta_box( $post ) {
         wp_nonce_field( 'tb_save_booking_meta', 'tb_booking_nonce' );
         $tour_id = get_post_meta( $post->ID, 'tb_tour_id', true );
-        $client_name = get_post_meta( $post->ID, 'tb_client_name', true );
-        $client_email = get_post_meta( $post->ID, 'tb_client_email', true );
         $participants = get_post_meta( $post->ID, 'tb_participants', true );
         $date = get_post_meta( $post->ID, 'tb_booking_date', true );
         $tours = get_posts( [ 'post_type' => 'tb_tour', 'numberposts' => -1, 'post_status' => 'publish' ] );
@@ -120,20 +119,28 @@ class TB_Post_Types {
             </select>
         </p>
         <p>
-            <label><strong><?php echo esc_html__( 'Client Name', 'tours-booking' ); ?></strong></label>
-            <input type="text" name="tb_client_name" value="<?php echo esc_attr( $client_name ); ?>" class="widefat" />
-        </p>
-        <p>
-            <label><strong><?php echo esc_html__( 'Client Email', 'tours-booking' ); ?></strong></label>
-            <input type="email" name="tb_client_email" value="<?php echo esc_attr( $client_email ); ?>" class="widefat" />
-        </p>
-        <p>
             <label><strong><?php echo esc_html__( 'Participants', 'tours-booking' ); ?></strong></label>
             <input type="number" name="tb_participants" value="<?php echo esc_attr( $participants ); ?>" class="widefat" />
         </p>
         <p>
             <label><strong><?php echo esc_html__( 'Booking Date', 'tours-booking' ); ?></strong></label>
             <input type="date" name="tb_booking_date" value="<?php echo esc_attr( $date ); ?>" class="widefat" />
+        </p>
+        <?php
+    }
+
+    public static function render_booking_client_meta_box( $post ) {
+        $client_id = get_post_meta( $post->ID, 'tb_client_id', true );
+        $clients = get_posts( [ 'post_type' => 'tb_client', 'numberposts' => -1, 'post_status' => 'publish' ] );
+        ?>
+        <p>
+            <label><strong><?php echo esc_html__( 'Client', 'tours-booking' ); ?></strong></label>
+            <select name="tb_client_id" class="widefat">
+                <option value="">—</option>
+                <?php foreach ( $clients as $c ) : ?>
+                    <option value="<?php echo esc_attr( $c->ID ); ?>" <?php selected( (int) $client_id, (int) $c->ID ); ?>><?php echo esc_html( $c->post_title . ' (' . get_post_meta( $c->ID, 'tb_client_email', true ) . ')' ); ?></option>
+                <?php endforeach; ?>
+            </select>
         </p>
         <?php
     }
@@ -171,8 +178,7 @@ class TB_Post_Types {
 
             $fields = [
                 'tb_tour_id' => 'intval',
-                'tb_client_name' => 'sanitize_text_field',
-                'tb_client_email' => 'sanitize_email',
+                'tb_client_id' => 'intval',
                 'tb_participants' => 'intval',
                 'tb_booking_date' => 'sanitize_text_field',
             ];

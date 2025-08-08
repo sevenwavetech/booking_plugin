@@ -22,6 +22,7 @@ class TB_Bookings {
         $booking_date = isset( $_POST['tb_booking_date'] ) ? sanitize_text_field( wp_unslash( $_POST['tb_booking_date'] ) ) : '';
         $client_name = isset( $_POST['tb_client_name'] ) ? sanitize_text_field( wp_unslash( $_POST['tb_client_name'] ) ) : '';
         $client_email = isset( $_POST['tb_client_email'] ) ? sanitize_email( wp_unslash( $_POST['tb_client_email'] ) ) : '';
+        $client_phone = isset( $_POST['tb_client_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['tb_client_phone'] ) ) : '';
         $participants = isset( $_POST['tb_participants'] ) ? intval( $_POST['tb_participants'] ) : 0;
 
         if ( ! $tour_id || ! $booking_date || ! $client_name || ! is_email( $client_email ) || $participants < 1 ) {
@@ -75,8 +76,9 @@ class TB_Bookings {
 
         update_post_meta( $post_id, 'tb_tour_id', $tour_id );
         update_post_meta( $post_id, 'tb_booking_date', $booking_date );
-        update_post_meta( $post_id, 'tb_client_name', $client_name );
-        update_post_meta( $post_id, 'tb_client_email', $client_email );
+        // Link/create client
+        $client_id = TB_Clients::find_or_create_by_email( $client_name, $client_email, $client_phone );
+        update_post_meta( $post_id, 'tb_client_id', $client_id );
         update_post_meta( $post_id, 'tb_participants', $participants );
         update_post_meta( $post_id, 'tb_custom_fields', $cf_values );
 
