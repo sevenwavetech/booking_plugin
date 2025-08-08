@@ -36,12 +36,16 @@ class TB_Calendar {
                     continue;
                 }
             }
-            $date = get_post_meta( $booking->ID, 'tb_booking_date', true );
-            if ( ! $date ) { continue; }
+            $start = get_post_meta( $booking->ID, 'tb_booking_start', true );
+            $end = get_post_meta( $booking->ID, 'tb_booking_end', true );
+            if ( ! $start ) { continue; }
+            $client_id = (int) get_post_meta( $booking->ID, 'tb_client_id', true );
+            $client_name = $client_id ? get_the_title( $client_id ) : '';
             $events[] = [
                 'id' => $booking->ID,
-                'title' => get_the_title( $tour_id ) . ' - ' . get_post_meta( $booking->ID, 'tb_client_name', true ),
-                'start' => $date,
+                'title' => get_the_title( $tour_id ) . ' - ' . $client_name,
+                'start' => $start,
+                'end' => $end,
                 'url' => get_edit_post_link( $booking->ID, '' ),
             ];
         }

@@ -42,6 +42,10 @@ class TB_Shortcodes {
                 <input type="date" name="tb_booking_date" required />
             </div>
             <div class="tb-field">
+                <label><?php echo esc_html__( 'Time Slot', 'tours-booking' ); ?>*</label>
+                <div class="tb-slots"></div>
+            </div>
+            <div class="tb-field">
                 <label><?php echo esc_html__( 'Client Name', 'tours-booking' ); ?>*</label>
                 <input type="text" name="tb_client_name" required />
             </div>

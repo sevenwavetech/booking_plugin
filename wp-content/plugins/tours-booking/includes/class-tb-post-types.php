@@ -6,6 +6,7 @@ class TB_Post_Types {
         self::register_tour_cpt();
         self::register_booking_cpt();
         self::register_booking_status_taxonomy();
+        self::register_service_category_taxonomy();
         add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ] );
         add_action( 'save_post', [ __CLASS__, 'save_meta' ], 10, 2 );
     }
@@ -54,6 +55,20 @@ class TB_Post_Types {
         ] );
     }
 
+    private static function register_service_category_taxonomy() {
+        $labels = [
+            'name' => __( 'Service Categories', 'tours-booking' ),
+            'singular_name' => __( 'Service Category', 'tours-booking' ),
+        ];
+        register_taxonomy( 'tb_service_category', [ 'tb_tour' ], [
+            'labels' => $labels,
+            'public' => false,
+            'show_ui' => true,
+            'hierarchical' => true,
+            'show_in_menu' => false,
+        ] );
+    }
+
     public static function add_meta_boxes() {
         add_meta_box( 'tb_tour_details', __( 'Tour Details', 'tours-booking' ), [ __CLASS__, 'render_tour_meta_box' ], 'tb_tour', 'normal', 'default' );
         add_meta_box( 'tb_tour_guides', __( 'Assigned Guides', 'tours-booking' ), [ __CLASS__, 'render_tour_guides_meta_box' ], 'tb_tour', 'side', 'default' );
@@ -68,10 +83,27 @@ class TB_Post_Types {
         $cost = get_post_meta( $post->ID, 'tb_cost', true );
         $min_participants = get_post_meta( $post->ID, 'tb_min_participants', true );
         $max_participants = get_post_meta( $post->ID, 'tb_max_participants', true );
+        $dur_min = (int) get_post_meta( $post->ID, 'tb_duration_minutes', true );
+        $buf_b = (int) get_post_meta( $post->ID, 'tb_buffer_before', true );
+        $buf_a = (int) get_post_meta( $post->ID, 'tb_buffer_after', true );
+        $cap_min = (int) get_post_meta( $post->ID, 'tb_capacity_min', true );
+        $cap_max = (int) get_post_meta( $post->ID, 'tb_capacity_max', true );
         ?>
         <p>
-            <label for="tb_duration"><strong><?php echo esc_html__( 'Duration', 'tours-booking' ); ?></strong></label>
+            <label for="tb_duration"><strong><?php echo esc_html__( 'Duration (text)', 'tours-booking' ); ?></strong></label>
             <input type="text" id="tb_duration" name="tb_duration" value="<?php echo esc_attr( $duration ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="tb_duration_minutes"><strong><?php echo esc_html__( 'Duration (minutes)', 'tours-booking' ); ?></strong></label>
+            <input type="number" id="tb_duration_minutes" name="tb_duration_minutes" value="<?php echo esc_attr( $dur_min ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="tb_buffer_before"><strong><?php echo esc_html__( 'Buffer Before (minutes)', 'tours-booking' ); ?></strong></label>
+            <input type="number" id="tb_buffer_before" name="tb_buffer_before" value="<?php echo esc_attr( $buf_b ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="tb_buffer_after"><strong><?php echo esc_html__( 'Buffer After (minutes)', 'tours-booking' ); ?></strong></label>
+            <input type="number" id="tb_buffer_after" name="tb_buffer_after" value="<?php echo esc_attr( $buf_a ); ?>" class="widefat" />
         </p>
         <p>
             <label for="tb_cost"><strong><?php echo esc_html__( 'Cost', 'tours-booking' ); ?></strong></label>
@@ -84,6 +116,14 @@ class TB_Post_Types {
         <p>
             <label for="tb_max_participants"><strong><?php echo esc_html__( 'Maximum Participants', 'tours-booking' ); ?></strong></label>
             <input type="number" id="tb_max_participants" name="tb_max_participants" value="<?php echo esc_attr( $max_participants ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="tb_capacity_min"><strong><?php echo esc_html__( 'Capacity Min (per slot)', 'tours-booking' ); ?></strong></label>
+            <input type="number" id="tb_capacity_min" name="tb_capacity_min" value="<?php echo esc_attr( $cap_min ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label for="tb_capacity_max"><strong><?php echo esc_html__( 'Capacity Max (per slot)', 'tours-booking' ); ?></strong></label>
+            <input type="number" id="tb_capacity_max" name="tb_capacity_max" value="<?php echo esc_attr( $cap_max ); ?>" class="widefat" />
         </p>
         <?php
     }
@@ -108,12 +148,14 @@ class TB_Post_Types {
         $tour_id = get_post_meta( $post->ID, 'tb_tour_id', true );
         $participants = get_post_meta( $post->ID, 'tb_participants', true );
         $date = get_post_meta( $post->ID, 'tb_booking_date', true );
+        $start = get_post_meta( $post->ID, 'tb_booking_start', true );
+        $end = get_post_meta( $post->ID, 'tb_booking_end', true );
         $tours = get_posts( [ 'post_type' => 'tb_tour', 'numberposts' => -1, 'post_status' => 'publish' ] );
         ?>
         <p>
-            <label><strong><?php echo esc_html__( 'Tour', 'tours-booking' ); ?></strong></label>
+            <label><strong><?php echo esc_html__( 'Service', 'tours-booking' ); ?></strong></label>
             <select name="tb_tour_id" class="widefat">
-                <option value=""><?php echo esc_html__( 'Select a tour', 'tours-booking' ); ?></option>
+                <option value=""><?php echo esc_html__( 'Select a service', 'tours-booking' ); ?></option>
                 <?php foreach ( $tours as $tour ) : ?>
                     <option value="<?php echo esc_attr( $tour->ID ); ?>" <?php selected( (int) $tour_id, (int) $tour->ID ); ?>><?php echo esc_html( $tour->post_title ); ?></option>
                 <?php endforeach; ?>
@@ -124,8 +166,16 @@ class TB_Post_Types {
             <input type="number" name="tb_participants" value="<?php echo esc_attr( $participants ); ?>" class="widefat" />
         </p>
         <p>
-            <label><strong><?php echo esc_html__( 'Booking Date', 'tours-booking' ); ?></strong></label>
+            <label><strong><?php echo esc_html__( 'Date', 'tours-booking' ); ?></strong></label>
             <input type="date" name="tb_booking_date" value="<?php echo esc_attr( $date ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label><strong><?php echo esc_html__( 'Start Time (Y-m-d H:i)', 'tours-booking' ); ?></strong></label>
+            <input type="text" name="tb_booking_start" value="<?php echo esc_attr( $start ); ?>" class="widefat" />
+        </p>
+        <p>
+            <label><strong><?php echo esc_html__( 'End Time (Y-m-d H:i)', 'tours-booking' ); ?></strong></label>
+            <input type="text" name="tb_booking_end" value="<?php echo esc_attr( $end ); ?>" class="widefat" />
         </p>
         <?php
     }
@@ -159,6 +209,11 @@ class TB_Post_Types {
                 'tb_cost' => 'floatval',
                 'tb_min_participants' => 'intval',
                 'tb_max_participants' => 'intval',
+                'tb_duration_minutes' => 'intval',
+                'tb_buffer_before' => 'intval',
+                'tb_buffer_after' => 'intval',
+                'tb_capacity_min' => 'intval',
+                'tb_capacity_max' => 'intval',
             ];
             foreach ( $fields as $key => $callback ) {
                 if ( isset( $_POST[ $key ] ) ) {
@@ -182,6 +237,8 @@ class TB_Post_Types {
                 'tb_client_id' => 'intval',
                 'tb_participants' => 'intval',
                 'tb_booking_date' => 'sanitize_text_field',
+                'tb_booking_start' => 'sanitize_text_field',
+                'tb_booking_end' => 'sanitize_text_field',
             ];
             foreach ( $fields as $key => $callback ) {
                 if ( isset( $_POST[ $key ] ) ) {

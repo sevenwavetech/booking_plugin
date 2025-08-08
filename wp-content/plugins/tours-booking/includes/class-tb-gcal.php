@@ -105,14 +105,16 @@ class TB_GCal {
 
         $tour_id = (int) get_post_meta( $booking_id, 'tb_tour_id', true );
         $client_name = (string) get_post_meta( $booking_id, 'tb_client_name', true );
+        $start = (string) get_post_meta( $booking_id, 'tb_booking_start', true );
+        $end = (string) get_post_meta( $booking_id, 'tb_booking_end', true );
         $date = (string) get_post_meta( $booking_id, 'tb_booking_date', true );
-        if ( ! $date ) { return new WP_Error( 'tb_gcal_no_date', __( 'No booking date.', 'tours-booking' ) ); }
+        if ( ! $start ) { return new WP_Error( 'tb_gcal_no_date', __( 'No booking time.', 'tours-booking' ) ); }
         $summary = sprintf( __( 'Tour: %s - %s', 'tours-booking' ), get_the_title( $tour_id ), $client_name );
 
         $body = [
             'summary' => $summary,
-            'start' => [ 'date' => $date ],
-            'end' => [ 'date' => $date ],
+            'start' => [ 'dateTime' => date( 'c', strtotime( $start ) ) ],
+            'end' => [ 'dateTime' => date( 'c', strtotime( $end ?: $start ) ) ],
             'description' => get_edit_post_link( $booking_id ) ?: '',
         ];
         $response = wp_remote_post( 'https://www.googleapis.com/calendar/v3/calendars/' . $calendarId . '/events', [

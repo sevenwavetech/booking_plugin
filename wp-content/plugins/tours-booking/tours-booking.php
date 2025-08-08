@@ -45,6 +45,7 @@ require_once TB_PLUGIN_DIR . 'includes/class-tb-clients.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-form-builder.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-i18n.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-services.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-schedule.php';
 
 class Tours_Booking_Plugin {
 
@@ -76,6 +77,7 @@ class Tours_Booking_Plugin {
         // AJAX endpoints
         add_action( 'wp_ajax_tb_submit_booking', [ 'TB_Bookings', 'handle_booking_submission' ] );
         add_action( 'wp_ajax_nopriv_tb_submit_booking', [ 'TB_Bookings', 'handle_booking_submission' ] );
+        TB_Schedule::register_ajax();
 
         add_action( 'wp_ajax_tb_get_calendar_events', [ 'TB_Calendar', 'ajax_get_events' ] );
         add_action( 'wp_ajax_tb_secure_download', [ 'TB_Uploads', 'secure_download' ] );
