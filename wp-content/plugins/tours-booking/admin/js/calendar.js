@@ -1,0 +1,1 @@
+// Placeholder: calendar functionality is implemented in admin.js for now.

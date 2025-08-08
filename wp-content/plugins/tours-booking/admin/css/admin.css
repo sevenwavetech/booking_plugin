@@ -1,0 +1,5 @@
+.tb-sortable{list-style:disc;padding-left:20px}
+.tb-sortable .tb-field{background:#fff;border:1px solid #ccd0d4;margin:6px 0;padding:8px;cursor:move}
+#tb-field-editor{margin:10px 0}
+#tb-calendar ul{margin:0;padding:10px;list-style:disc}
+#tb-calendar li{margin:6px 0}
