@@ -43,6 +43,8 @@ require_once TB_PLUGIN_DIR . 'includes/class-tb-gcal.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-employees.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-clients.php';
 require_once TB_PLUGIN_DIR . 'includes/class-tb-form-builder.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-i18n.php';
+require_once TB_PLUGIN_DIR . 'includes/class-tb-services.php';
 
 class Tours_Booking_Plugin {
 
@@ -59,6 +61,7 @@ class Tours_Booking_Plugin {
         add_action( 'admin_menu', [ 'TB_Employees', 'register_menu' ] );
         add_action( 'admin_menu', [ 'TB_Clients', 'add_menu' ] );
         add_action( 'admin_menu', [ 'TB_Form_Builder', 'register_menu' ] );
+        add_action( 'admin_menu', [ 'TB_Services', 'register_menu' ] );
 
         // Assets
         add_action( 'admin_enqueue_scripts', [ 'TB_Admin', 'enqueue_assets' ] );
@@ -66,6 +69,9 @@ class Tours_Booking_Plugin {
 
         // Shortcodes
         add_action( 'init', [ 'TB_Shortcodes', 'register_shortcodes' ] );
+
+        // i18n dynamic string registration
+        add_action( 'init', [ 'TB_I18n', 'register_dynamic_strings' ] );
 
         // AJAX endpoints
         add_action( 'wp_ajax_tb_submit_booking', [ 'TB_Bookings', 'handle_booking_submission' ] );

@@ -17,10 +17,11 @@ class TB_Post_Types {
         ];
         register_post_type( 'tb_tour', [
             'labels' => $labels,
-            'public' => true,
-            'has_archive' => true,
+            'public' => false,
+            'has_archive' => false,
+            'show_ui' => false,
             'show_in_menu' => false,
-            'supports' => [ 'title', 'editor' ],
+            'supports' => [],
         ] );
     }
 

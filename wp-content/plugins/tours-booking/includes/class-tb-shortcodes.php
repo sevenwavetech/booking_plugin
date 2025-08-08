@@ -59,8 +59,9 @@ class TB_Shortcodes {
             </div>
 
             <?php foreach ( $custom_fields as $field ) : ?>
+                <?php $label = TB_I18n::translate_string( 'Custom Fields', 'field_' . $field['id'] . '_label', $field['label'] ); ?>
                 <div class="tb-field">
-                    <label><?php echo esc_html( $field['label'] ); ?><?php echo ! empty( $field['required'] ) ? '*' : ''; ?></label>
+                    <label><?php echo esc_html( $label ); ?><?php echo ! empty( $field['required'] ) ? '*' : ''; ?></label>
                     <?php if ( 'text' === $field['type'] || 'email' === $field['type'] ) : ?>
                         <input type="<?php echo esc_attr( $field['type'] ); ?>" name="cf[<?php echo esc_attr( $field['id'] ); ?>]" <?php echo ! empty( $field['required'] ) ? 'required' : ''; ?> />
                     <?php elseif ( 'select' === $field['type'] ) : ?>

@@ -13,7 +13,7 @@ class TB_Admin {
             26
         );
 
-        add_submenu_page( 'tb_dashboard', __( 'Tours', 'tours-booking' ), __( 'Tours', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_tour' );
+        add_submenu_page( 'tb_dashboard', __( 'Services', 'tours-booking' ), __( 'Services', 'tours-booking' ), 'manage_options', 'tb_services', [ 'TB_Services', 'render_list' ] );
         add_submenu_page( 'tb_dashboard', __( 'Bookings', 'tours-booking' ), __( 'Bookings', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_booking' );
         add_submenu_page( 'tb_dashboard', __( 'Employees', 'tours-booking' ), __( 'Employees', 'tours-booking' ), 'manage_options', 'tb_employees', [ 'TB_Employees', 'render_list' ] );
         add_submenu_page( 'tb_dashboard', __( 'Clients', 'tours-booking' ), __( 'Clients', 'tours-booking' ), 'manage_options', 'edit.php?post_type=tb_client' );
